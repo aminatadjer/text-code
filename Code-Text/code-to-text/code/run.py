@@ -22,7 +22,7 @@ using a masked language modeling (MLM) loss.
 from __future__ import absolute_import
 import os
 import sys
-import bleu
+from bleu import _bleu
 import pickle
 import torch
 import json
@@ -448,8 +448,8 @@ def main():
                         f.write(str(gold.idx)+'\t'+ref+'\n')
                         f1.write(str(gold.idx)+'\t'+gold.target+'\n')     
 
-                (goldMap, predictionMap) = bleu.computeMaps(predictions, os.path.join(args.output_dir, "dev.gold")) 
-                dev_bleu=round(bleu.bleuFromMaps(goldMap, predictionMap)[0],2)
+               
+                dev_bleu=round(_bleu(predictions, os.path.join(args.output_dir, "dev.gold")),2)
                 logger.info("  %s = %s "%("bleu-4",str(dev_bleu)))
                 logger.info("  "+"*"*20)    
                 if dev_bleu>best_bleu:
@@ -504,8 +504,8 @@ def main():
                     f.write(str(gold.idx)+'\t'+ref+'\n')
                     f1.write(str(gold.idx)+'\t'+gold.target+'\n')     
 
-            (goldMap, predictionMap) = bleu.computeMaps(predictions, os.path.join(args.output_dir, "test_{}.gold".format(idx))) 
-            dev_bleu=round(bleu.bleuFromMaps(goldMap, predictionMap)[0],2)
+           
+            dev_bleu=round(_bleu(predictions, os.path.join(args.output_dir, "test_{}.gold".format(idx))),2)
             logger.info("  %s = %s "%("bleu-4",str(dev_bleu)))
             logger.info("  "+"*"*20)    
 
@@ -517,5 +517,3 @@ def main():
                 
 if __name__ == "__main__":
     main()
-
-
